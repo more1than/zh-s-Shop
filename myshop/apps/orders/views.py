@@ -1,7 +1,11 @@
 from django_redis import get_redis_connection
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from goods.models import SKU
+from decimal import Decimal
+from rest_framework.generics import CreateAPIView
+from orders.serializers import OrderSettlementSerializer, CommitOrderSerializer
 
 
 class OrderSettlementView(APIView):
@@ -21,5 +25,24 @@ class OrderSettlementView(APIView):
             cart_dict[int(sku_id_bytes)] = int(cart_dict_redis[sku_id_bytes])
 
         # 获取勾选商品SKU商品模型
-        # skus =
+        skus = SKU.objects.filter(id__in=cart_dict.keys())
+
         # 遍历SKUs查询集添加count
+        for sku in skus:
+            sku.count = cart_dict[sku.id]
+
+        # 运费数据
+        freight = Decimal("10.00")
+        data_dict = {"freight": freight, "skus": skus}
+
+        serializer = OrderSettlementSerializer(data_dict)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data)
+
+
+class CommitOrderView(CreateAPIView):
+    """保存订单"""
+    serializer_class = CommitOrderSerializer
+
+    permission_classes = [IsAuthenticated]
