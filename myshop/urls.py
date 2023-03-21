@@ -34,4 +34,6 @@ urlpatterns = [
     re_path(r"^", include("carts.urls")),  # 购物车模块
 
     re_path(r"^", include("orders.urls")),  # 订单模块
+
+    re_path(r"^", include("payment.urls")),  # 支付宝模块
 ]
