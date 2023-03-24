@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',  # DRF
     "corsheaders",  # cors跨域
     # 'django_crontab',  # 定时器模块
+    "haystack",  # 搜索模块
 
     "users.apps.UsersConfig",  # 用户认证模块
     "verifications.apps.VerificationsConfig",  # 短信模块
@@ -317,3 +318,15 @@ CRONTAB_COMMAND_PREFIX = "LANG_ALL=zh_cn.UTF-8"
 ALIPAY_APPID = "1203012301203013"
 ALIPAY_DEBUG = True
 ALIPAY_URL = "https://openapi.alipaydev.com/geteway.do"
+
+# Haystack
+HAYSTACK_CONNECTIONS = {
+    "default": {
+        "ENGINE": "haystack.backends.elasticsearch.ElasticsearchSearchEngine",
+        "URL": "http://192.168.0.0:9200",  # ip为Elasticsearch服务端IP地址，9200是Elasticsearch的默认端口号
+        "INDEX_NAME": "MYSHOP",  # 指定Elasticsearch建立的索引库名称
+    }
+}
+
+# 当添加，修改，删除操作时，自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
