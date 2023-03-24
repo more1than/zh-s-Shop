@@ -100,7 +100,15 @@ DATABASES = {
         'PORT': 3306,
         'USER': 'zhanghao',
         'PASSWORD': 'zhanghao'
-    }
+    },
+    'slave': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'my_shop',
+        'HOST': "127.0.0.1",
+        'PORT': 3307,
+        'USER': 'zhanghao',
+        'PASSWORD': 'zhanghao'
+    },
 }
 
 # Password validation
@@ -330,3 +338,6 @@ HAYSTACK_CONNECTIONS = {
 
 # 当添加，修改，删除操作时，自动生成索引
 HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
+
+# 配置读写分离
+DATABASES_ROUTERS = ["myshop.utils.db_router.MasterSlaveDBRouter"]
